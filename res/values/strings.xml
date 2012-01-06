@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Rain</string>
+    <string name="wiper_status_label">The windshield wipers are:</string>
+</resources>
