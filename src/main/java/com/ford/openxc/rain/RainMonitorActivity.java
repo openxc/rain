@@ -22,8 +22,8 @@ import android.util.Log;
 import android.widget.TextView;
 
 import com.openxc.VehicleService;
+import com.openxc.remote.NoValueException;
 import com.openxc.measurements.VehicleMeasurement;
-import com.openxc.measurements.NoValueException;
 import com.openxc.measurements.UnrecognizedMeasurementTypeException;
 import com.ford.openxc.rain.R;
 import com.openxc.measurements.WindshieldWiperStatus;
@@ -54,35 +54,29 @@ public class RainMonitorActivity extends Activity {
                         WindshieldWiperStatus.class);
             } catch(UnrecognizedMeasurementTypeException e) {
                 return;
+            } catch(NoValueException e) {
+                Log.w(TAG, "One or more of the required measurements" +
+                        " didn't have a value", e);
+                return;
             }
 
-            if(!latitude.isNone() && !longitude.isNone() &&
-                    !wiperStatus.isNone()) {
-                final boolean wiperStatusValue;
-                try {
-                    wiperStatusValue =
-                        wiperStatus.getValue().booleanValue();
-                } catch(NoValueException e) {
-                    Log.w(TAG, "Expected wiper status to have a value " +
-                            "but it did not", e);
-                    return;
-                }
+            final boolean wiperStatusValue;
+            wiperStatusValue = wiperStatus.getValue().booleanValue();
 
-                mHandler.post(new Runnable() {
-                    public void run() {
-                        String wiperText;
-                        if(wiperStatusValue) {
-                            wiperText = "on";
-                        } else {
-                            wiperText = "off";
-                        }
-                        mWiperStatusView.setText(wiperText);
+            mHandler.post(new Runnable() {
+                public void run() {
+                    String wiperText;
+                    if(wiperStatusValue) {
+                        wiperText = "on";
+                    } else {
+                        wiperText = "off";
                     }
-                });
-                uploadWiperStatus(latitude, longitude, wiperStatus);
-                // Repeat every 5 minutes or 300,000ms
-                mHandler.postDelayed(this, 300000);
-            }
+                    mWiperStatusView.setText(wiperText);
+                }
+            });
+            uploadWiperStatus(latitude, longitude, wiperStatus);
+            // Repeat every 5 minutes or 300,000ms
+            mHandler.postDelayed(this, 300000);
         }
 
         private void uploadWiperStatus(Latitude latitude, Longitude longitude,
@@ -90,15 +84,9 @@ public class RainMonitorActivity extends Activity {
             double latitudeValue;
             double longitudeValue;
             boolean wiperStatusValue;
-            try {
-                latitudeValue = latitude.getValue().doubleValue();
-                longitudeValue = longitude.getValue().doubleValue();
-                wiperStatusValue = wiperStatus.getValue().booleanValue();
-            } catch(NoValueException e) {
-                Log.w(TAG, "Expected measurements to have a value, " +
-                        "but at least one didn't -- skipping upload", e);
-                return;
-            }
+            latitudeValue = latitude.getValue().doubleValue();
+            longitudeValue = longitude.getValue().doubleValue();
+            wiperStatusValue = wiperStatus.getValue().booleanValue();
 
             if(!wiperStatusValue) {
                 Log.d(TAG, "Wipers are off -- not uploading");
