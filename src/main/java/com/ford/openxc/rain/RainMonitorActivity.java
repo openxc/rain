@@ -23,13 +23,11 @@ import android.widget.TextView;
 
 import com.openxc.VehicleService;
 import com.openxc.remote.NoValueException;
-import com.openxc.measurements.VehicleMeasurement;
 import com.openxc.measurements.UnrecognizedMeasurementTypeException;
 import com.ford.openxc.rain.R;
 import com.openxc.measurements.WindshieldWiperStatus;
 import com.openxc.measurements.Latitude;
 import com.openxc.measurements.Longitude;
-import com.openxc.remote.RemoteVehicleServiceException;
 
 public class RainMonitorActivity extends Activity {
 
