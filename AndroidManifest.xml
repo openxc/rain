@@ -31,6 +31,7 @@
           android:anyDensity="true" />
 
   <uses-permission android:name="android.permission.INTERNET" />
+  <uses-sdk android:minSdkVersion="12" />
 
 </manifest>
 
