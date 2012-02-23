@@ -8,4 +8,9 @@
             android:text="@string/wiper_status_label" />
     <TextView android:id="@+id/wiper_status"
             style="@style/DefaultFont" />
+    <TextView android:id="@+id/alert_status_label"
+            style="@style/DefaultFont"
+            android:text="@string/alert_status_label" />
+    <TextView android:id="@+id/alert_status"
+            style="@style/DefaultFont" />
 </LinearLayout>

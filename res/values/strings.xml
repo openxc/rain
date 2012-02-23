@@ -2,4 +2,5 @@
 <resources>
     <string name="app_name">Rain</string>
     <string name="wiper_status_label">The windshield wipers are:</string>
+    <string name="alert_status_label">There is a weather alert near you:</string>
 </resources>

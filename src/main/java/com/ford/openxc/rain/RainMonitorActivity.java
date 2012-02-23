@@ -57,6 +57,7 @@ public class RainMonitorActivity extends Activity {
         setContentView(R.layout.main);
         Log.i(TAG, "Rain monitor created");
         mWiperStatusView = (TextView) findViewById(R.id.wiper_status);
+        mAlertStatusView = (TextView) findViewById(R.id.alert_status);
     }
 
     @Override
