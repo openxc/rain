@@ -20,6 +20,8 @@ import com.openxc.VehicleService;
 
 import android.os.Handler;
 
+import android.util.Log;
+
 import android.widget.TextView;
 
 public class FetchAlertsTask implements Runnable {
@@ -65,6 +67,7 @@ public class FetchAlertsTask implements Runnable {
         try {
             wunderground = new URL(urlBuilder.toString());
         } catch (MalformedURLException e) {
+            Log.w(TAG, "URL we created isn't valid", e);
             return;
         }
 
@@ -97,6 +100,7 @@ public class FetchAlertsTask implements Runnable {
             //JSONObject json = (JSONObject) new JSONValue().parse(result);
             //System.out.println(json.get("alerts"));
         } catch (IOException e) {
+            Log.w(TAG, "Unable to fetch alert information", e);
             return;
         }
 
