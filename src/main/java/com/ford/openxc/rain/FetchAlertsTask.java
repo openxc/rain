@@ -23,14 +23,16 @@ import android.os.Handler;
 import android.widget.TextView;
 
 public class FetchAlertsTask implements Runnable {
-    String mTargetUrl;
-    VehicleService mVehicleService;
-    Handler mHandler;
-    TextView mAlertStatusView;
+    private final String TAG = "FetchAlertsTask";
+    private final String API_URL =
+        "http://api.wunderground.com/api/dcffc57e05a81ad8/alerts/q/";
 
-    public FetchAlertsTask(String url, VehicleService vehicleService,
-            Handler handler, TextView alertStatusView) {
-        mTargetUrl = url;
+    private VehicleService mVehicleService;
+    private Handler mHandler;
+    private TextView mAlertStatusView;
+
+    public FetchAlertsTask(VehicleService vehicleService, Handler handler,
+            TextView alertStatusView) {
         mVehicleService = vehicleService;
         mHandler = handler;
         mAlertStatusView = alertStatusView;
@@ -55,7 +57,7 @@ public class FetchAlertsTask implements Runnable {
             longitudeValue = 131;
         }
 
-        StringBuilder urlBuilder = new StringBuilder(mTargetUrl);
+        StringBuilder urlBuilder = new StringBuilder(API_URL);
         urlBuilder.append(latitudeValue + ",");
         urlBuilder.append(longitudeValue + ".json");
 
