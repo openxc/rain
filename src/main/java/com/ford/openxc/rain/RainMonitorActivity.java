@@ -38,7 +38,7 @@ public class RainMonitorActivity extends Activity {
 
             mFetchAlertsTask = new FetchAlertsTask(mVehicleService, mHandler,
                     mAlertStatusView);
-            mCheckWipersTask = new FetchAlertsTask(mVehicleService, mHandler,
+            mCheckWipersTask = new CheckWipersTask(mVehicleService, mHandler,
                     mWiperStatusView);
             mHandler.postDelayed(mCheckWipersTask, 100);
             mHandler.postDelayed(mFetchAlertsTask, 100);
