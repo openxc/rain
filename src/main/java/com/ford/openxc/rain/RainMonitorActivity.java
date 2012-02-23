@@ -51,7 +51,7 @@ public class RainMonitorActivity extends Activity {
     private final Handler mHandler = new Handler();
 
     private String result = null;
-    
+
     /*
      * THis is my main runnable function to get Alerts
      */
@@ -65,14 +65,14 @@ public class RainMonitorActivity extends Activity {
             longitude = (Longitude) mVehicleService.get(Longitude.class);
             wiperStatus = (WindshieldWiperStatus) mVehicleService.get(
                     WindshieldWiperStatus.class);
-    		 
-    		
+
+
         } catch(UnrecognizedMeasurementTypeException e) {
             return null;
         } catch (NoValueException e) {
         	return null;
         }*/
-        
+
 			latitudeTest = "28";
 			longitudeTest = "131";
 			final String API_URL = "http://api.wunderground.com/api/dcffc57e05a81ad8/alerts/q/";
@@ -86,7 +86,7 @@ public class RainMonitorActivity extends Activity {
 			} catch (MalformedURLException e) {
 				return;
 			}
-        
+
 			try {
 				HttpURLConnection wundergroundConnection = (HttpURLConnection) wunderground.openConnection();
 				InputStream in = new BufferedInputStream(wundergroundConnection.getInputStream());
@@ -105,7 +105,7 @@ public class RainMonitorActivity extends Activity {
 			} catch (IOException e) {
 				return;
 			}
-			
+
 			mHandler.post(new Runnable() {
                 public void run() {
                 	String test;
@@ -117,11 +117,11 @@ public class RainMonitorActivity extends Activity {
                     mAlertsStatusView.setText(test);
                 }
             });
-			
-		
+
+
 		}
     };
-    
+
     private Runnable mCheckWipersTask = new Runnable() {
         public void run() {
             final Latitude latitude;
@@ -226,7 +226,7 @@ public class RainMonitorActivity extends Activity {
         Log.i(TAG, "Rain monitor created");
         mWiperStatusView = (TextView) findViewById(R.id.wiper_status);
 
-        
+
     }
 
     @Override
