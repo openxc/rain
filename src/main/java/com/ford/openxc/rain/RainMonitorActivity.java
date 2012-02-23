@@ -42,7 +42,8 @@ public class RainMonitorActivity extends Activity {
     private static String TAG = "RainMonitorActivity";
     private final String WUNDERGROUND_URL =
         "http://www.wunderground.com/weatherstation/VehicleWeatherUpdate.php";
-    private final String API_URL = "http://api.wunderground.com/api/dcffc57e05a81ad8/alerts/q/";
+    private final String API_URL =
+        "http://api.wunderground.com/api/dcffc57e05a81ad8/alerts/q/";
 
     private VehicleService mVehicleService;
     private boolean mIsBound;
@@ -75,21 +76,22 @@ public class RainMonitorActivity extends Activity {
 
 			latitudeTest = "28";
 			longitudeTest = "131";
-			final String API_URL = "http://api.wunderground.com/api/dcffc57e05a81ad8/alerts/q/";
 			StringBuilder urlBuilder = new StringBuilder(API_URL);
 			urlBuilder.append(latitudeTest + ",");
 			urlBuilder.append(longitudeTest + ".json");
 			URL wunderground;
 			try {
 				String testURL = urlBuilder.toString();
-				wunderground = new URL("http://api.wunderground.com/api/dcffc57e05a81ad8/alerts/q/37,-122.json");
+				wunderground = new URL(API_URL + "37,-122.json");
 			} catch (MalformedURLException e) {
 				return;
 			}
 
 			try {
-				HttpURLConnection wundergroundConnection = (HttpURLConnection) wunderground.openConnection();
-				InputStream in = new BufferedInputStream(wundergroundConnection.getInputStream());
+				HttpURLConnection wundergroundConnection =
+                    (HttpURLConnection) wunderground.openConnection();
+				InputStream in = new BufferedInputStream(
+                        wundergroundConnection.getInputStream());
 				InputStreamReader is = new InputStreamReader(in);
 				BufferedReader br = new BufferedReader(is);
 				String line = br.readLine();
@@ -225,8 +227,6 @@ public class RainMonitorActivity extends Activity {
         setContentView(R.layout.main);
         Log.i(TAG, "Rain monitor created");
         mWiperStatusView = (TextView) findViewById(R.id.wiper_status);
-
-
     }
 
     @Override
