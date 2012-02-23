@@ -59,6 +59,7 @@ public class FetchAlertsTask implements Runnable {
         } catch(UnrecognizedMeasurementTypeException e) {
             return;
         } catch (NoValueException e) {
+            Log.d(TAG, "No vehicle data available, using fake lat/long");
             latitudeValue = 28;
             longitudeValue = 131;
         }
