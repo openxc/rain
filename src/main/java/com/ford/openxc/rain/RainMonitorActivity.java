@@ -57,7 +57,7 @@ public class RainMonitorActivity extends Activity {
     /*
      * THis is my main runnable function to get Alerts
      */
-    private Runnable getAlerts = new Runnable() {
+    private Runnable mFetchAlertsTask = new Runnable() {
 		public void run() {
 			final String latitudeTest;
 			final String longitudeTest;
@@ -121,7 +121,7 @@ public class RainMonitorActivity extends Activity {
                 }
             });
 
-
+            mHandler.postDelayed(this, 300000);
 		}
     };
 
@@ -213,6 +213,7 @@ public class RainMonitorActivity extends Activity {
             mIsBound = true;
 
             mHandler.postDelayed(mCheckWipersTask, 100);
+            mHandler.postDelayed(mFetchAlertsTask, 100);
         }
 
         public void onServiceDisconnected(ComponentName className) {
