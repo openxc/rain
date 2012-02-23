@@ -54,9 +54,6 @@ public class RainMonitorActivity extends Activity {
 
     private String result = null;
 
-    /*
-     * THis is my main runnable function to get Alerts
-     */
     private Runnable mFetchAlertsTask = new Runnable() {
 		public void run() {
 			final String latitudeTest;
