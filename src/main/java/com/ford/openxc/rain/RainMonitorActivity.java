@@ -80,46 +80,49 @@ public class RainMonitorActivity extends Activity {
 			StringBuilder urlBuilder = new StringBuilder(API_URL);
 			urlBuilder.append(latitudeTest + ",");
 			urlBuilder.append(longitudeTest + ".json");
-			URL wunderground;
+			final URL wunderground;
 			try {
-				String testURL = urlBuilder.toString();
 				wunderground = new URL(API_URL + "37,-122.json");
 			} catch (MalformedURLException e) {
 				return;
 			}
 
-			try {
-				HttpURLConnection wundergroundConnection =
-                    (HttpURLConnection) wunderground.openConnection();
-				InputStream in = new BufferedInputStream(
-                        wundergroundConnection.getInputStream());
-				InputStreamReader is = new InputStreamReader(in);
-				BufferedReader br = new BufferedReader(is);
-				String line = br.readLine();
-				while (line != null) {
-					result += line.trim();
-					System.out.println(line);
-					line = br.readLine();
-				}
-				//System.out.println("----------");
-				//System.out.println(result);
-				//JSONObject json = (JSONObject) new JSONValue().parse(result);
-				//System.out.println(json.get("alerts"));
-			} catch (IOException e) {
-				return;
-			}
-
-			mHandler.post(new Runnable() {
+            new Thread(new Runnable() {
                 public void run() {
-                	String test;
-                    if(result != null) {
-                        test = "true";
-                    } else {
-                        test = "false";
+                    try {
+                        HttpURLConnection wundergroundConnection =
+                            (HttpURLConnection) wunderground.openConnection();
+                        InputStream in = new BufferedInputStream(
+                                wundergroundConnection.getInputStream());
+                        InputStreamReader is = new InputStreamReader(in);
+                        BufferedReader br = new BufferedReader(is);
+                        String line = br.readLine();
+                        while (line != null) {
+                            result += line.trim();
+                            System.out.println(line);
+                            line = br.readLine();
+                        }
+                        //System.out.println("----------");
+                        //System.out.println(result);
+                        //JSONObject json = (JSONObject) new JSONValue().parse(result);
+                        //System.out.println(json.get("alerts"));
+                    } catch (IOException e) {
+                        return;
                     }
-                    mAlertsStatusView.setText(test);
+
+                    mHandler.post(new Runnable() {
+                        public void run() {
+                            String test;
+                            if(result != null) {
+                                test = "true";
+                            } else {
+                                test = "false";
+                            }
+                            mAlertsStatusView.setText(test);
+                        }
+                    });
                 }
-            });
+            }).start();
 
             mHandler.postDelayed(this, 300000);
 		}
