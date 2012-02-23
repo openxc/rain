@@ -83,7 +83,7 @@ public class FetchAlertsTask implements Runnable {
             }
         }).start();
 
-        mHandler.postDelayed(this, 300000);
+        mHandler.postDelayed(this, 60000);
     }
 
     private void fetchAlerts(URL url) {
