@@ -79,7 +79,7 @@ public class CheckWipersTask implements Runnable {
     }
 
     private void uploadWiperStatus(Latitude latitude, Longitude longitude,
-            WindshieldWiperStatus wiperStatus) {
+            final WindshieldWiperStatus wiperStatus) {
         double latitudeValue;
         double longitudeValue;
         boolean wiperStatusValue;
@@ -101,21 +101,26 @@ public class CheckWipersTask implements Runnable {
         uriBuilder.append("?wiperspd=" + wiperSpeed);
         uriBuilder.append("&lat=" + latitudeValue);
         uriBuilder.append("&lon=" + longitudeValue);
+        final String finalUri = uriBuilder.toString();
 
-        final HttpClient client = new DefaultHttpClient();
-        HttpGet request = new HttpGet(uriBuilder.toString());
-        try {
-            HttpResponse response = client.execute(request);
-            final int statusCode = response.getStatusLine().getStatusCode();
-            if(statusCode != HttpStatus.SC_OK) {
-                Log.w(TAG, "Error " + statusCode +
-                    " while uploading wiper status");
-            } else {
-                Log.d(TAG, "Wiper status (" + wiperStatus + ") uploaded " +
-                    "successfully");
+        new Thread(new Runnable() {
+            public void run() {
+                final HttpClient client = new DefaultHttpClient();
+                HttpGet request = new HttpGet(finalUri);
+                try {
+                    HttpResponse response = client.execute(request);
+                    final int statusCode = response.getStatusLine().getStatusCode();
+                    if(statusCode != HttpStatus.SC_OK) {
+                        Log.w(TAG, "Error " + statusCode +
+                            " while uploading wiper status");
+                    } else {
+                        Log.d(TAG, "Wiper status (" + wiperStatus + ") uploaded " +
+                            "successfully");
+                    }
+                } catch(IOException e) {
+                    Log.w(TAG, "Error while uploading wiper status", e);
+                }
             }
-        } catch(IOException e) {
-            Log.w(TAG, "Error while uploading wiper status", e);
-        }
+        }).start();
     }
 }
