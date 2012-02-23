@@ -63,6 +63,8 @@ public class FetchAlertsTask implements Runnable {
             longitudeValue = 131;
         }
 
+        Log.d(TAG, "Querying for weather alerts near " + latitudeValue +
+                ", " + longitudeValue);
         StringBuilder urlBuilder = new StringBuilder(API_URL);
         urlBuilder.append(latitudeValue + ",");
         urlBuilder.append(longitudeValue + ".json");
@@ -106,8 +108,14 @@ public class FetchAlertsTask implements Runnable {
         final boolean hasAlerts;
         try {
             JSONObject result = new JSONObject(builder.toString());
-            JSONArray alerts = result.getJSONArray("alerts");
-            hasAlerts = alerts.length() > 0;
+            if(!result.has("alerts")) {
+                hasAlerts = false;
+                Log.d(TAG, "Wunderground didn't recognize the lat/long");
+            } else {
+                JSONArray alerts = result.getJSONArray("alerts");
+                hasAlerts = alerts.length() > 0;
+                Log.d(TAG, "Wunderground reports an alert: " + hasAlerts);
+            }
         } catch(JSONException e) {
             Log.w(TAG, "Received invalid JSON", e);
             return;
