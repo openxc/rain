@@ -70,37 +70,41 @@ public class FetchAlertsTask implements Runnable {
 
         new Thread(new Runnable() {
             public void run() {
-                String result = "";
-                try {
-                    HttpURLConnection wundergroundConnection =
-                        (HttpURLConnection) wunderground.openConnection();
-                    InputStream in = new BufferedInputStream(
-                            wundergroundConnection.getInputStream());
-                    InputStreamReader is = new InputStreamReader(in);
-                    BufferedReader br = new BufferedReader(is);
-                    String line = br.readLine();
-                    while (line != null) {
-                        result += line.trim();
-                        System.out.println(line);
-                        line = br.readLine();
-                    }
-                    //System.out.println("----------");
-                    //System.out.println(result);
-                    //JSONObject json = (JSONObject) new JSONValue().parse(result);
-                    //System.out.println(json.get("alerts"));
-                } catch (IOException e) {
-                    return;
-                }
-
-                final boolean hasResult = result != null;
-                mHandler.post(new Runnable() {
-                    public void run() {
-                        mAlertStatusView.setText("" + hasResult);
-                    }
-                });
+                fetchAlerts(wunderground);
             }
         }).start();
 
         mHandler.postDelayed(this, 300000);
+    }
+
+    private void fetchAlerts(URL url) {
+        String result = "";
+        try {
+            HttpURLConnection wundergroundConnection =
+                (HttpURLConnection) url.openConnection();
+            InputStream in = new BufferedInputStream(
+                    wundergroundConnection.getInputStream());
+            InputStreamReader is = new InputStreamReader(in);
+            BufferedReader br = new BufferedReader(is);
+            String line = br.readLine();
+            while (line != null) {
+                result += line.trim();
+                System.out.println(line);
+                line = br.readLine();
+            }
+            //System.out.println("----------");
+            //System.out.println(result);
+            //JSONObject json = (JSONObject) new JSONValue().parse(result);
+            //System.out.println(json.get("alerts"));
+        } catch (IOException e) {
+            return;
+        }
+
+        final boolean hasResult = result != null;
+        mHandler.post(new Runnable() {
+            public void run() {
+                mAlertStatusView.setText("" + hasResult);
+            }
+        });
     }
 }
