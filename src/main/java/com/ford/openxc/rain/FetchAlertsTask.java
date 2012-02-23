@@ -10,6 +10,10 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.openxc.measurements.Latitude;
 import com.openxc.measurements.Longitude;
 import com.openxc.measurements.UnrecognizedMeasurementTypeException;
@@ -81,33 +85,37 @@ public class FetchAlertsTask implements Runnable {
     }
 
     private void fetchAlerts(URL url) {
-        String result = "";
+        StringBuilder builder = new StringBuilder();
         try {
             HttpURLConnection wundergroundConnection =
                 (HttpURLConnection) url.openConnection();
             InputStream in = new BufferedInputStream(
                     wundergroundConnection.getInputStream());
+
             InputStreamReader is = new InputStreamReader(in);
             BufferedReader br = new BufferedReader(is);
-            String line = br.readLine();
-            while (line != null) {
-                result += line.trim();
-                System.out.println(line);
-                line = br.readLine();
+            String line;
+            while((line = br.readLine()) != null) {
+                builder.append(line);
             }
-            //System.out.println("----------");
-            //System.out.println(result);
-            //JSONObject json = (JSONObject) new JSONValue().parse(result);
-            //System.out.println(json.get("alerts"));
         } catch (IOException e) {
             Log.w(TAG, "Unable to fetch alert information", e);
             return;
         }
 
-        final boolean hasResult = result != null;
+        final boolean hasAlerts;
+        try {
+            JSONObject result = new JSONObject(builder.toString());
+            JSONArray alerts = result.getJSONArray("alerts");
+            hasAlerts = alerts.length() > 0;
+        } catch(JSONException e) {
+            Log.w(TAG, "Received invalid JSON", e);
+            return;
+        }
+
         mHandler.post(new Runnable() {
             public void run() {
-                mAlertStatusView.setText("" + hasResult);
+                mAlertStatusView.setText("" + hasAlerts);
             }
         });
     }
