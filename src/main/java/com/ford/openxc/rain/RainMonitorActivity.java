@@ -46,14 +46,84 @@ public class RainMonitorActivity extends Activity {
 
     private VehicleService mVehicleService;
     private boolean mIsBound;
-    private TextView mWiperStatusView;;
+    private TextView mWiperStatusView;
+    private TextView mAlertsStatusView;
     private final Handler mHandler = new Handler();
 
+    private String result = null;
+    
+    /*
+     * THis is my main runnable function to get Alerts
+     */
+    private Runnable getAlerts = new Runnable() {
+		public void run() {
+			final String latitudeTest;
+			final String longitudeTest;
+
+        /*try {
+            latitude = (Latitude) mVehicleService.get(Latitude.class);
+            longitude = (Longitude) mVehicleService.get(Longitude.class);
+            wiperStatus = (WindshieldWiperStatus) mVehicleService.get(
+                    WindshieldWiperStatus.class);
+    		 
+    		
+        } catch(UnrecognizedMeasurementTypeException e) {
+            return null;
+        } catch (NoValueException e) {
+        	return null;
+        }*/
+        
+			latitudeTest = "28";
+			longitudeTest = "131";
+			final String API_URL = "http://api.wunderground.com/api/dcffc57e05a81ad8/alerts/q/";
+			StringBuilder urlBuilder = new StringBuilder(API_URL);
+			urlBuilder.append(latitudeTest + ",");
+			urlBuilder.append(longitudeTest + ".json");
+			URL wunderground;
+			try {
+				String testURL = urlBuilder.toString();
+				wunderground = new URL("http://api.wunderground.com/api/dcffc57e05a81ad8/alerts/q/37,-122.json");
+			} catch (MalformedURLException e) {
+				return;
+			}
+        
+			try {
+				HttpURLConnection wundergroundConnection = (HttpURLConnection) wunderground.openConnection();
+				InputStream in = new BufferedInputStream(wundergroundConnection.getInputStream());
+				InputStreamReader is = new InputStreamReader(in);
+				BufferedReader br = new BufferedReader(is);
+				String line = br.readLine();
+				while (line != null) {
+					result += line.trim();
+					System.out.println(line);
+					line = br.readLine();
+				}
+				//System.out.println("----------");
+				//System.out.println(result);
+				//JSONObject json = (JSONObject) new JSONValue().parse(result);
+				//System.out.println(json.get("alerts"));
+			} catch (IOException e) {
+				return;
+			}
+			
+			mHandler.post(new Runnable() {
+                public void run() {
+                	String test;
+                    if(result != null) {
+                        test = "true";
+                    } else {
+                        test = "false";
+                    }
+                    mAlertsStatusView.setText(test);
+                }
+            });
+			
+		
+		}
+    };
+    
     private Runnable mCheckWipersTask = new Runnable() {
         public void run() {
-        	getAlerts();
-        	
-        	
             final Latitude latitude;
             final Longitude longitude;
             final WindshieldWiperStatus wiperStatus;
@@ -149,82 +219,14 @@ public class RainMonitorActivity extends Activity {
         }
     };
 
- // This API returns weather alerts at the current location as a string.
-    public String getAlerts() {
-    	JSONObject json = readAlerts();
-		if (json != null) {
-			return json.get("alerts").toString();
-		}
-		return null;
-        
-    };
-
-    private static JSONObject readAlerts() {
-    	
-        final String latitudeTest;
-        final String longitudeTest;
-
-        /*try {
-            latitude = (Latitude) mVehicleService.get(Latitude.class);
-            longitude = (Longitude) mVehicleService.get(Longitude.class);
-            wiperStatus = (WindshieldWiperStatus) mVehicleService.get(
-                    WindshieldWiperStatus.class);
-    		 
-    		
-        } catch(UnrecognizedMeasurementTypeException e) {
-            return null;
-        } catch (NoValueException e) {
-        	return null;
-        }*/
-        
-    	latitudeTest = "28";
-    	longitudeTest = "131";
-    	final String API_URL = "http://api.wunderground.com/api/dcffc57e05a81ad8/alerts/q/";
-        StringBuilder urlBuilder = new StringBuilder(API_URL);
-        urlBuilder.append(latitudeTest + ",");
-        urlBuilder.append(longitudeTest + ".json");
-        
-        URL wunderground;
-        try {
-        	String testURL = urlBuilder.toString();
-        	wunderground = new URL("http://api.wunderground.com/api/dcffc57e05a81ad8/alerts/q/37,-122.json");
-        } catch (MalformedURLException e) {
-        	return null;
-        }
-        
-        try {
-        	HttpURLConnection wundergroundConnection = (HttpURLConnection) wunderground.openConnection();
-        	InputStream in = new BufferedInputStream(wundergroundConnection.getInputStream());
-        	InputStreamReader is = new InputStreamReader(in);
-        	BufferedReader br = new BufferedReader(is);
-        	String line = br.readLine();
-        	String result = "";
-
-        	while (line != null) {
-        		result += line.trim();
-        		System.out.println(line);
-        		line = br.readLine();
-        	}
-        	System.out.println("----------");
-        	System.out.println(result);
-        	
-        	
-        	
-        	 JSONObject json = (JSONObject) new JSONValue().parse(result);
-        	 System.out.println(json.get("alerts"));
-        	 return json;
-        } catch (IOException e) {
-        	return null;
-        }
-    	
-    };
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         Log.i(TAG, "Rain monitor created");
-
         mWiperStatusView = (TextView) findViewById(R.id.wiper_status);
+
+        
     }
 
     @Override
