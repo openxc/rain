@@ -1,5 +1,8 @@
 package com.ford.openxc.rain;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
@@ -25,8 +28,9 @@ public class RainMonitorActivity extends Activity {
     private TextView mAlertStatusView;
     private final Handler mHandler = new Handler();
 
-    private Runnable mFetchAlertsTask;
-    private Runnable mCheckWipersTask;
+    private TimerTask mFetchAlertsTask;
+    private TimerTask mCheckWipersTask;
+    private Timer mTimer;
 
     private ServiceConnection mConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName className,
@@ -40,8 +44,9 @@ public class RainMonitorActivity extends Activity {
                     mAlertStatusView);
             mCheckWipersTask = new CheckWipersTask(mVehicleService, mHandler,
                     mWiperStatusView);
-            mHandler.postDelayed(mCheckWipersTask, 100);
-            mHandler.postDelayed(mFetchAlertsTask, 100);
+            mTimer = new Timer();
+            mTimer.schedule(mFetchAlertsTask, 100, 60000);
+            mTimer.schedule(mCheckWipersTask, 100, 300000);
         }
 
         public void onServiceDisconnected(ComponentName className) {

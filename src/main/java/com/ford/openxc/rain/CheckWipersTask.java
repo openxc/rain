@@ -1,5 +1,7 @@
 package com.ford.openxc.rain;
 
+import java.util.TimerTask;
+
 import java.io.IOException;
 
 import org.apache.http.client.HttpClient;
@@ -26,7 +28,7 @@ import android.util.Log;
 
 import android.widget.TextView;
 
-public class CheckWipersTask implements Runnable {
+public class CheckWipersTask extends TimerTask {
     private final String TAG = "CheckWipersTask";
     private final String WUNDERGROUND_URL =
         "http://www.wunderground.com/weatherstation/VehicleWeatherUpdate.php";
@@ -74,8 +76,6 @@ public class CheckWipersTask implements Runnable {
             }
         });
         uploadWiperStatus(latitude, longitude, wiperStatus);
-        // Repeat every 5 minutes or 300,000ms
-        mHandler.postDelayed(this, 300000);
     }
 
     private void uploadWiperStatus(Latitude latitude, Longitude longitude,

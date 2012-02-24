@@ -1,5 +1,6 @@
 package com.ford.openxc.rain;
 
+import java.util.TimerTask;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -28,7 +29,7 @@ import android.util.Log;
 
 import android.widget.TextView;
 
-public class FetchAlertsTask implements Runnable {
+public class FetchAlertsTask extends TimerTask {
     private final String TAG = "FetchAlertsTask";
     private final String API_URL =
         "http://api.wunderground.com/api/dcffc57e05a81ad8/alerts/q/";
@@ -83,8 +84,6 @@ public class FetchAlertsTask implements Runnable {
                 fetchAlerts(wunderground);
             }
         }).start();
-
-        mHandler.postDelayed(this, 60000);
     }
 
     private void fetchAlerts(URL url) {
