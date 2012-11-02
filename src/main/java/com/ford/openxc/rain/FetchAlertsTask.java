@@ -19,9 +19,9 @@ import com.openxc.measurements.Latitude;
 import com.openxc.measurements.Longitude;
 import com.openxc.measurements.UnrecognizedMeasurementTypeException;
 
-import com.openxc.remote.NoValueException;
+import com.openxc.NoValueException;
 
-import com.openxc.VehicleService;
+import com.openxc.VehicleManager;
 
 import android.os.Handler;
 
@@ -34,13 +34,13 @@ public class FetchAlertsTask extends TimerTask {
     private final String API_URL =
         "http://api.wunderground.com/api/dcffc57e05a81ad8/alerts/q/";
 
-    private VehicleService mVehicleService;
+    private VehicleManager mVehicle;
     private Handler mHandler;
     private TextView mAlertStatusView;
 
-    public FetchAlertsTask(VehicleService vehicleService, Handler handler,
+    public FetchAlertsTask(VehicleManager vehicle, Handler handler,
             TextView alertStatusView) {
-        mVehicleService = vehicleService;
+        mVehicle = vehicle;
         mHandler = handler;
         mAlertStatusView = alertStatusView;
     }
@@ -51,9 +51,9 @@ public class FetchAlertsTask extends TimerTask {
 
         try {
             Latitude latitude = (Latitude)
-                    mVehicleService.get(Latitude.class);
+                    mVehicle.get(Latitude.class);
             Longitude longitude = (Longitude)
-                    mVehicleService.get(Longitude.class);
+                    mVehicle.get(Longitude.class);
 
             latitudeValue = latitude.getValue().doubleValue();
             longitudeValue = longitude.getValue().doubleValue();

@@ -18,9 +18,9 @@ import com.openxc.measurements.Longitude;
 import com.openxc.measurements.UnrecognizedMeasurementTypeException;
 import com.openxc.measurements.WindshieldWiperStatus;
 
-import com.openxc.remote.NoValueException;
+import com.openxc.NoValueException;
 
-import com.openxc.VehicleService;
+import com.openxc.VehicleManager;
 
 import android.os.Handler;
 
@@ -33,13 +33,13 @@ public class CheckWipersTask extends TimerTask {
     private final String WUNDERGROUND_URL =
         "http://www.wunderground.com/weatherstation/VehicleWeatherUpdate.php";
 
-    private VehicleService mVehicleService;
+    private VehicleManager mVehicle;
     private Handler mHandler;
     private TextView mWiperStatusView;
 
-    public CheckWipersTask(VehicleService vehicleService, Handler handler,
+    public CheckWipersTask(VehicleManager vehicle, Handler handler,
             TextView wiperStatusView) {
-        mVehicleService = vehicleService;
+        mVehicle = vehicle;
         mHandler = handler;
         mWiperStatusView = wiperStatusView;
     }
@@ -49,9 +49,9 @@ public class CheckWipersTask extends TimerTask {
         final Longitude longitude;
         final WindshieldWiperStatus wiperStatus;
         try {
-            latitude = (Latitude) mVehicleService.get(Latitude.class);
-            longitude = (Longitude) mVehicleService.get(Longitude.class);
-            wiperStatus = (WindshieldWiperStatus) mVehicleService.get(
+            latitude = (Latitude) mVehicle.get(Latitude.class);
+            longitude = (Longitude) mVehicle.get(Longitude.class);
+            wiperStatus = (WindshieldWiperStatus) mVehicle.get(
                     WindshieldWiperStatus.class);
         } catch(UnrecognizedMeasurementTypeException e) {
             return;

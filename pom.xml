@@ -22,7 +22,7 @@
         <dependency>
             <groupId>com.openxc</groupId>
             <artifactId>openxc</artifactId>
-            <version>1.2</version>
+            <version>2.0</version>
             <type>apklib</type>
         </dependency>
     </dependencies>
@@ -104,6 +104,23 @@
                 <configuration>
                     <useFile>false</useFile>
                 </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/../libs</outputDirectory>
+                            <excludeScope>provided</excludeScope>
+                            <excludeTransitive>true</excludeTransitive>
+                            <excludeArtifactIds>${project.artifactId},openxc</excludeArtifactIds>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

@@ -15,14 +15,14 @@ import android.os.IBinder;
 import android.util.Log;
 import android.widget.TextView;
 
-import com.openxc.VehicleService;
+import com.openxc.VehicleManager;
 import com.ford.openxc.rain.R;
 
 public class RainMonitorActivity extends Activity {
 
     private static String TAG = "RainMonitorActivity";
 
-    private VehicleService mVehicleService;
+    private VehicleManager mVehicle;
     private boolean mIsBound;
     private TextView mWiperStatusView;
     private TextView mAlertStatusView;
@@ -35,14 +35,13 @@ public class RainMonitorActivity extends Activity {
     private ServiceConnection mConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName className,
                 IBinder service) {
-            Log.i(TAG, "Bound to VehicleService");
-            mVehicleService = ((VehicleService.VehicleServiceBinder)service
-                    ).getService();
+            Log.i(TAG, "Bound to VehicleManager");
+            mVehicle = ((VehicleManager.VehicleBinder)service).getService();
             mIsBound = true;
 
-            mFetchAlertsTask = new FetchAlertsTask(mVehicleService, mHandler,
+            mFetchAlertsTask = new FetchAlertsTask(mVehicle, mHandler,
                     mAlertStatusView);
-            mCheckWipersTask = new CheckWipersTask(mVehicleService, mHandler,
+            mCheckWipersTask = new CheckWipersTask(mVehicle, mHandler,
                     mWiperStatusView);
             mTimer = new Timer();
             mTimer.schedule(mFetchAlertsTask, 100, 60000);
@@ -50,8 +49,8 @@ public class RainMonitorActivity extends Activity {
         }
 
         public void onServiceDisconnected(ComponentName className) {
-            Log.w(TAG, "RemoteVehicleService disconnected unexpectedly");
-            mVehicleService = null;
+            Log.w(TAG, "RemoteVehicleManager disconnected unexpectedly");
+            mVehicle = null;
             mIsBound = false;
         }
     };
@@ -68,7 +67,7 @@ public class RainMonitorActivity extends Activity {
     @Override
     public void onResume() {
         super.onResume();
-        bindService(new Intent(this, VehicleService.class),
+        bindService(new Intent(this, VehicleManager.class),
                 mConnection, Context.BIND_AUTO_CREATE);
     }
 
