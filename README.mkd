@@ -1,0 +1,10 @@
+OpenXC Rain Monitor
+============
+
+This is a dirt simple [OpenXC][] application to detect a change in windshield wiper
+status and upload it to remote web server.
+
+## License
+
+Copyright (c) 2011-2013 Ford Motor Company
+Licensed under the BSD license.
