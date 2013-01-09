@@ -10,100 +10,69 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <android.version>4.1.1.4</android.version>
+        <android.platform>17</android.platform>
+
+        <java.version>1.6</java.version>
+        <android-maven.version>3.4.1</android-maven.version>
     </properties>
 
     <dependencies>
         <dependency>
-            <groupId>android</groupId>
+            <groupId>com.google.android</groupId>
             <artifactId>android</artifactId>
-            <version>3.1_r3</version>
+            <version>${android.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.openxc</groupId>
+            <groupId>com.openxcplatform</groupId>
             <artifactId>openxc</artifactId>
-            <version>2.0</version>
+            <version>3.0-SNAPSHOT</version>
             <type>apklib</type>
         </dependency>
     </dependencies>
 
     <build>
+        <sourceDirectory>src</sourceDirectory>
         <finalName>${project.artifactId}</finalName>
         <pluginManagement>
             <plugins>
                 <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>2.5</version>
+                    <configuration>
+                        <source>${java.version}</source>
+                        <target>${java.version}</target>
+                </configuration>
+                </plugin>
+
+                <plugin>
                     <groupId>com.jayway.maven.plugins.android.generation2</groupId>
                     <artifactId>android-maven-plugin</artifactId>
-                    <version>3.1.1</version>
+                    <version>${android-maven.version}</version>
                     <extensions>true</extensions>
-                </plugin>
-                <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
-                <plugin>
-                    <groupId>org.eclipse.m2e</groupId>
-                    <artifactId>lifecycle-mapping</artifactId>
-                    <version>1.0.0</version>
                     <configuration>
-                        <lifecycleMappingMetadata>
-                            <pluginExecutions>
-                                <pluginExecution>
-                                    <pluginExecutionFilter>
-                                        <groupId>
-                                            com.jayway.maven.plugins.android.generation2
-                                        </groupId>
-                                        <artifactId>
-                                            android-maven-plugin
-                                        </artifactId>
-                                        <versionRange>
-                                            [3.1.1,)
-                                        </versionRange>
-                                        <goals>
-                                            <goal>proguard</goal>
-                                        </goals>
-                                    </pluginExecutionFilter>
-                                    <action>
-                                        <ignore></ignore>
-                                    </action>
-                                </pluginExecution>
-                            </pluginExecutions>
-                        </lifecycleMappingMetadata>
+                        <dex>
+                            <jvmArguments>
+                                <argument>-Xms256m</argument>
+                                <argument>-Xmx512m</argument>
+                            </jvmArguments>
+                        </dex>
+                        <sdk>
+                            <platform>${android.platform}</platform>
+                        </sdk>
+                        <undeployBeforeDeploy>false</undeployBeforeDeploy>
+                        <testDebug>false</testDebug>
                     </configuration>
-                </plugin>
+                    </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2</version>
-                <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
-                </configuration>
-            </plugin>
-            <plugin>
                 <groupId>com.jayway.maven.plugins.android.generation2</groupId>
                 <artifactId>android-maven-plugin</artifactId>
-                <configuration>
-                    <dex>
-                        <jvmArguments>
-                            <argument>-Xms256m</argument>
-                            <argument>-Xmx512m</argument>
-                        </jvmArguments>
-                    </dex>
-                    <sdk>
-                        <platform>12</platform>
-                    </sdk>
-                    <undeployBeforeDeploy>true</undeployBeforeDeploy>
-                    <testDebug>false</testDebug>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.10</version>
-                <configuration>
-                    <useFile>false</useFile>
-                </configuration>
             </plugin>
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
@@ -117,7 +86,7 @@
                             <outputDirectory>${project.build.directory}/../libs</outputDirectory>
                             <excludeScope>provided</excludeScope>
                             <excludeTransitive>true</excludeTransitive>
-                            <excludeArtifactIds>${project.artifactId},openxc</excludeArtifactIds>
+                            <excludeArtifactIds>support-v4,actionbarsherlock,mpg,openxc</excludeArtifactIds>
                         </configuration>
                     </execution>
                 </executions>
