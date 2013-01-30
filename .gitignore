@@ -2,3 +2,5 @@ target
 bin
 .settings
 gen
+.project
+.classpath
